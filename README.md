@@ -2,23 +2,40 @@
 
 Spin-up CloudFormation stacks for each commit and run integration tests.
 
-## Usage
-
-#### Github Workflow
+## Setup
 
 Create a Github Workflow using the following template in `${PROJECT_ROOT}/.github/main.workflow`,
 
 ```
 workflow "Test most recent commit" {
   on = "push"
-  resolves = ["Build Test Container"]
+  resolves = ["Create Test Stack"]
 }
 
-action "Build Test Container" {
+action "Create Test Stack" {
   uses = "elizabethwarren/serverless-integration-testing@master"
+  runs = ["sh", "-c", "sls deploy --stage $GITHUB_SHA"]
   secrets = [
-    "GITHUB_TOKEN",
+    "AWS_ACCESS_KEY_ID"
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_DEFAULT_REGION",
+  ]
+}
+
+action "Run Integration Tests" {
+  uses = "elizabethwarren/serverless-integration-testing@master"
+  runs = "npm run test:integration"
+  needs = "Create Test Stack"
+  secrets = [
     "INCOMING_SLACK_URI",
+  ]
+}
+
+action "Remove Test Stack" {
+  uses = "elizabethwarren/serverless-integration-testing@master"
+  runs = ["sh", "-c", "sls remove --stage $GITHUB_SHA"]
+  needs = "Create Test Stack"
+  secrets = [
     "AWS_ACCESS_KEY_ID"
     "AWS_SECRET_ACCESS_KEY",
     "AWS_DEFAULT_REGION",
@@ -50,13 +67,16 @@ module.exports.router = router(app);
 
 Don't forget to replace `-example` with the name of your service.
 
-Lastly, setup the necessary CI command to run your integration tests in your project `Makefile`,
+Lastly, create the main test integration file in `${PROJECT_ROOT}/test-integration/index.js`,
 
-```make
-ci-integration:
-  npm run install
-  npm run test:integration # Define however you want.
-                           # You could seed a database here as well, for example.  
+```js
+const TEST_SERVICE_URI = process.env.TEST_SERVICE_URI;
+
+// ...
 ```
 
 You should now be setup to run integration tests automatically for each commit in your pull request.
+
+## Writing Integration Tests
+
+TK TK
