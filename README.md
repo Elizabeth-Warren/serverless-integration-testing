@@ -4,6 +4,8 @@ Spin-up CloudFormation stacks for each commit and run integration tests.
 
 ## Usage
 
+#### Github Workflow
+
 Create a Github Workflow using the following template in `${PROJECT_ROOT}/.github/main.workflow`,
 
 ```
@@ -24,24 +26,29 @@ action "Build Test Container" {
 }
 ```
 
-Add the necessary environment credentials to the workflow.
+Don't forget to add the necessary environment credentials to the workflow, you can do this within the Github Actions UI.
 
 Then make sure your project `serverless.yml` is properly configured,
 
 ```yml
 custom:
-  stage: ${opt:stage, self:provider.stage}
-  domains:
-    prod: api.mycompany.com
-    staging: staging-api.mycompany.com
-    dev: dev-api.mycompany.com
-
+  stage: ${opt:stage, 'dev'}
   customDomain:
-    basePath: ""
-    domainName: ${self:custom.domains.${self:custom.stage}}
-    stage: "${self:custom.stage}"
+    domainName: api.elizabethwarren.codes
+    basePath: ${self:custom.stage}-example
+    stage: ${self:custom.stage}
     createRoute53Record: true
 ```
+
+Your app handler definition should match this,
+
+```js
+const { framework, router } = require('@ewarren/serverless-routing');
+const app = framework({ basePath: '/:stage-example' });
+module.exports.router = router(app);
+```
+
+Don't forget to replace `-example` with the name of your service.
 
 Lastly, setup the necessary CI command to run your integration tests in your project `Makefile`,
 
@@ -52,4 +59,4 @@ ci-integration:
                            # You could seed a database here as well, for example.  
 ```
 
-You should now be setup to run integration tests for each commit in your pull request.
+You should now be setup to run integration tests automatically for each commit in your pull request.
