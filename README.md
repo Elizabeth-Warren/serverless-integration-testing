@@ -67,12 +67,15 @@ module.exports.router = router(app);
 
 Don't forget to replace `-example` with the name of your service.
 
-Lastly, create the main test integration file in `${PROJECT_ROOT}/test-integration/index.js`,
+Lastly, create the test command in your project `package.json` file,
 
-```js
-const TEST_SERVICE_URI = process.env.TEST_SERVICE_URI;
-
-// ...
+```json
+{
+  "scripts": {
+    "test": "mocha --recursive",
+    "test:integration": "node test-integration/index.js"
+  },
+}
 ```
 
 You should now be setup to run integration tests automatically for each commit in your pull request.
