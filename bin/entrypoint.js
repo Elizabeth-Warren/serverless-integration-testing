@@ -8,6 +8,10 @@ const STAGE_ROUTE = `https://api.elizabethwarren.codes/${STAGE}`;
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function command(input, exitOnFailure = true) {
   console.log(`Executing command '${input}'`);
 
@@ -38,6 +42,7 @@ async function main() {
   try {
     await command('npm install');
     await command(`sls deploy --stage ${STAGE}`);
+    await sleep(5000); // Give API Gateway a second or two...
     const testResults = await command(`STAGE_ROUTE=${STAGE_ROUTE} npm run test:integration`, false);
     await command(`sls remove --stage ${STAGE}`);
 
