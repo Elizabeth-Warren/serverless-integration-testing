@@ -8,8 +8,6 @@ const STAGE_ROUTE = `https://api.elizabethwarren.codes/${STAGE}`;
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-async function
-
 async function command(input, exitOnFailure = true) {
   console.log(`Executing command '${input}'`);
 
