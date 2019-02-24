@@ -8,10 +8,10 @@ COMMAND=$1;
 main() {
   if [ "$COMMAND" = 'create-stack' ]; then
     sls deploy --stage $STAGE
-  elif [ "$COMMAND" = 'delete-stack' ]; then
+  elif [ "$COMMAND" = 'remove-stack' ]; then
     sls remove --stage $STAGE
   else
-    echo "Invalid command supplied; must be one of [create-stack, delete-stack]."
+    echo "Invalid command supplied; must be one of [create-stack, remove-stack]."
     exit 1
   fi
 }
