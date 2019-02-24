@@ -61,4 +61,26 @@ You should now be setup to run integration tests automatically for each commit i
 
 ## Writing Integration Tests
 
-TK TK
+Your script can access the `STAGE_ROUTE` environment variable which constructs a URL with the API subdomain and the unique stage name for the commit. You can then append `-example` (replace 'example' with your api path) to get a fully qualified URL you can run tests against.
+
+```js
+const STAGE_ROUTE = process.env.STAGE_ROUTE;
+const EXAMPLE_ROUTE = `${STAGE_ROUTE}-example`;
+
+const assert = require('assert').strict;
+const request = require('request-promise-native');
+
+async function test() {
+  try {
+    const exampleResponse = await request(`${EXAMPLE_ROUTE}/ping`);
+    assert.strictEqual(exampleResponse.statusCode, 200);
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+}
+
+test();
+```
+
+Make sure you exit with a failure code if a test fails so the pull request is correctly marked as having failed the test suite.
