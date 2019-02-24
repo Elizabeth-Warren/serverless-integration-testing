@@ -1,3 +1,4 @@
+const GITHUB_WORKSPACE = process.env.GITHUB_WORKSPACE;
 const GITHUB_SHA = process.env.GITHUB_SHA;
 const STAGE = GITHUB_SHA.slice(0, 7);
 
@@ -8,7 +9,7 @@ async function command(input) {
   console.log(`Executing command '${input}'`);
 
   try {
-    const { stdout, stderr } = await exec(input);
+    const { stdout, stderr } = await exec(input, { cwd: GITHUB_WORKSPACE });
 
     if (stdout) {
       console.log(stdout);
