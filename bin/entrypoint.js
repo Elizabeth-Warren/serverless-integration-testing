@@ -1,7 +1,7 @@
 const GITHUB_WORKSPACE = process.env.GITHUB_WORKSPACE;
 const GITHUB_SHA = process.env.GITHUB_SHA;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const STAGE = `git-${GITHUB_SHA.slice(0, 7)}`;
+const STAGE = `git${GITHUB_SHA.slice(0, 7)}`;
 
 const STAGE_ROUTE = `https://api.elizabethwarren.codes/${STAGE}`;
 
