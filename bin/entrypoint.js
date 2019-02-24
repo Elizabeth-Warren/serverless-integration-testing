@@ -1,6 +1,6 @@
 const GITHUB_WORKSPACE = process.env.GITHUB_WORKSPACE;
 const GITHUB_SHA = process.env.GITHUB_SHA;
-const STAGE = GITHUB_SHA.slice(0, 7);
+const STAGE = `git-${GITHUB_SHA.slice(0, 7)}`;
 
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
