@@ -26,10 +26,10 @@ async function command(input) {
 
 async function main() {
   try {
-    command('npm install');
-    command(`sls deploy --stage ${STAGE}`);
-    command('npm run test:integration');
-    command(`sls remove --stage ${STAGE}`);
+    await command('npm install');
+    await command(`sls deploy --stage ${STAGE}`);
+    await command('npm run test:integration');
+    await command(`sls remove --stage ${STAGE}`);
   } catch (error) {
     console.error(error);
   }
