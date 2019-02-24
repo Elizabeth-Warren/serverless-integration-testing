@@ -9,29 +9,11 @@ Create a Github Workflow using the following template in `${PROJECT_ROOT}/.githu
 ```
 workflow "Test most recent commit" {
   on = "push"
-  resolves = ["Create Test Stack"]
+  resolves = ["Run Integration Test"]
 }
 
-action "Create Test Stack" {
+action "Run Integration Test" {
   uses = "elizabeth-warren/serverless-integration-testing@master"
-  runs = ["sh", "-c", "sls deploy --stage $GITHUB_SHA"]
-  secrets = [
-    "AWS_ACCESS_KEY_ID",
-    "AWS_SECRET_ACCESS_KEY",
-    "AWS_DEFAULT_REGION",
-  ]
-}
-
-action "Run Integration Tests" {
-  uses = "elizabeth-warren/serverless-integration-testing@master"
-  runs = "npm run test:integration"
-  needs = "Create Test Stack"
-}
-
-action "Remove Test Stack" {
-  uses = "elizabeth-warren/serverless-integration-testing@master"
-  runs = ["sh", "-c", "sls remove --stage $GITHUB_SHA"]
-  needs = "Run Integration Tests"
   secrets = [
     "AWS_ACCESS_KEY_ID",
     "AWS_SECRET_ACCESS_KEY",
