@@ -2,13 +2,13 @@
 
 set -Eeuo pipefail
 
-$STAGE = ${$GITHUB_SHA:0:7}
-$COMMAND = $1;
+STAGE=${$GITHUB_SHA:0:7}
+COMMAND=$1;
 
 main() {
-  if [$COMMAND = 'create-stack'] then
+  if [ "$COMMAND" = 'create-stack' ]; then
     sls deploy --stage $STAGE
-  elif [$COMMAND = 'delete-stack'] then
+  elif [ "$COMMAND" = 'delete-stack' ]; then
     sls remove --stage $STAGE
   else
     echo "Invalid command supplied; must be one of [create-stack, delete-stack]."
