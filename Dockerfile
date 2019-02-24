@@ -1,6 +1,7 @@
 FROM node:8.10-stretch
 
-COPY bin/script.sh /usr/local/bin/sls-int-test
-RUN chmod +x /usr/local/bin/sls-int-test
+COPY bin/script.js /github/workspace/_integration-bootstrap.js
 
 RUN npm install -g serverless
+
+ENTRYPOINT ["node", "/github/workspace/_integration-bootstrap.js"]
